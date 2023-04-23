@@ -2,6 +2,8 @@
 ARG VARIANT=3-bullseye
 FROM --platform=linux/amd64 python:3.10
 
+WORKDIR /app
+
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     # Remove imagemagick due to https://security-tracker.debian.org/tracker/CVE-2019-10131
     && apt-get purge -y imagemagick imagemagick-6-common
@@ -16,9 +18,15 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install /tmp/chrome.deb
 
 # [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
-# COPY requirements.txt /tmp/pip-tmp/
-# RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
-#    && rm -rf /tmp/pip-tmp
+ COPY ./Auto-GPT/requirements.txt /tmp/pip-tmp/
+ RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+    && rm -rf /tmp/pip-tmp
+
+COPY ./Auto-GPT/ .
+
+CMD ["python", "app.py"]
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
