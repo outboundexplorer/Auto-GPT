@@ -171,6 +171,10 @@ def construct_prompt() -> str:
         str: The prompt string
     """
     config = AIConfig.load(CFG.ai_settings_file)
+    logger.typewriter_log("[HELLO] construct_prompt() -- config", Fore.BLUE, repr(config))
+    # construct_prompt() <autogpt.config.ai_config.AIConfig object at 0x401983c9a0>
+
+    # Check to see whether we need to reprompt the user and whether we already have a nadme
     if CFG.skip_reprompt and config.ai_name:
         logger.typewriter_log("Name :", Fore.GREEN, config.ai_name)
         logger.typewriter_log("Role :", Fore.GREEN, config.ai_role)
@@ -193,7 +197,11 @@ Continue (y/n): """
             config = AIConfig()
 
     if not config.ai_name:
+        # Prompt the user to setup their Ai's goals and return an instance of the AIConfig class
         config = prompt_user()
+        logger.typewriter_log("[HELLO] prompt.py config.save -- CFG.ai_settings_file", Fore.BLUE, CFG.ai_settings_file)
+
+        # Save the config to the file using the method defined on the AIConfig class
         config.save(CFG.ai_settings_file)
 
     # Get rid of this global:

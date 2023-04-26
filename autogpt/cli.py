@@ -1,8 +1,10 @@
 """Main script for the autogpt package."""
 import click
 
-
+# Creates a new click.Group that will execute the main function if no subcommand is provided.
 @click.group(invoke_without_command=True)
+
+
 @click.option("-c", "--continuous", is_flag=True, help="Enable Continuous Mode")
 @click.option(
     "--skip-reprompt",
@@ -82,7 +84,10 @@ def main(
     from autogpt.prompt import construct_prompt
     from autogpt.utils import get_current_git_branch, get_latest_bulletin
 
+    # This checks if no subcommand is provided; if true, the main function will execute.
     if ctx.invoked_subcommand is None:
+
+        # Creates a Config object to manage the configuration settings.
         cfg = Config()
         # TODO: fill in llm values here
         check_openai_api_key()
@@ -124,6 +129,9 @@ def main(
                     "Please consider upgrading to Python 3.10 or higher.",
                 )
         system_prompt = construct_prompt()
+        logger.typewriter_log("[HELLO] construct_prompt() -- system_prompt", Fore.BLUE, system_prompt)
+        print('cli.py system_prompt', system_prompt)
+
         # print(prompt)
         # Initialize variables
         full_message_history = []

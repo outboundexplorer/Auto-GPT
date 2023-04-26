@@ -10,6 +10,7 @@ from typing import Type
 import yaml
 
 
+
 class AIConfig:
     """
     A class object that contains the configuration information for the AI
